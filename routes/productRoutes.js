@@ -15,11 +15,11 @@ const router = express.Router();
 router.use(authenticateToken);
 
 // Product CRUD routes
-router.post("/add", createProductController);
-router.get("/getAll", getAllProductsController);
+router.post("/", createProductController);
+router.get("/", getAllProductsController);
 router.get("/stats", getProductStatsController);
-router.get("/getById/:id", getProductByIdController);
-router.put("/update/:id", updateProductController);
-router.delete("/delete/:id", deleteProductController);
+router.get("/:id", getProductByIdController);
+router.put("/:id", updateProductController);
+router.delete("/:id", deleteProductController);
 
 export default router;

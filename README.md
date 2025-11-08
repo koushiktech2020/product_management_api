@@ -17,6 +17,34 @@ A Node.js REST API for managing products, built with Express.js, MongoDB, and JW
 - CORS support
 - Environment-based configuration
 
+## Project Structure
+
+```
+product_management_api/
+├── controllers/          # Request handlers
+│   ├── userController.js     # Auth controllers
+│   └── productController.js  # Product CRUD controllers
+├── services/            # Business logic
+│   ├── userService.js        # Auth services
+│   └── productService.js     # Product services
+├── models/              # Database models
+│   ├── User.js              # User schema
+│   └── Product.js           # Product schema
+├── routes/              # API routes
+│   ├── userRoutes.js        # Auth routes (/api/auth/*)
+│   └── productRoutes.js     # Product routes (/api/products/*)
+├── middleware/          # Custom middleware
+│   └── authenticateToken.js # JWT validation
+├── helpers/             # Utility functions
+│   └── pipelineHelpers.js   # MongoDB aggregation helpers
+├── utils/               # Core utilities
+│   ├── connectDB.js         # Database connection
+│   └── generateToken.js     # JWT token generation
+├── app.js               # Express app setup
+├── index.js             # Server entry point
+└── README.md
+```
+
 ## Installation
 
 1. Clone the repository:
@@ -95,6 +123,60 @@ The API will be available at `http://localhost:5000` (or the port specified in y
 - **bcrypt** - Password hashing
 - **CORS** - Cross-origin resource sharing
 - **dotenv** - Environment variable management
+
+## Usage Examples
+
+### Authentication
+
+**Register a new user:**
+
+```bash
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+**Login:**
+
+```bash
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+### Products (Require Authentication)
+
+**Create a product:**
+
+```bash
+POST /api/products
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "name": "Laptop",
+  "description": "Gaming laptop",
+  "price": 1200,
+  "category": "Electronics",
+  "stock": 10
+}
+```
+
+**Get products with search and pagination:**
+
+```bash
+GET /api/products?page=1&limit=5&search=laptop&category=electronics&sortBy=price&sortOrder=asc
+Authorization: Bearer <token>
+```
 
 ## Scripts
 
