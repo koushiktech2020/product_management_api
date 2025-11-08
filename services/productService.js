@@ -1,5 +1,5 @@
 import { Product } from "../models/index.js";
-import { buildProductPipeline } from "../helpers/index.js";
+import { buildProductPipeline, toObjectId } from "../utils/index.js";
 
 // Create a new product
 const createProduct = async (productData) => {
@@ -24,8 +24,14 @@ const getAllProducts = async (userId, query = {}) => {
       sortOrder = "desc",
     } = query;
 
+    // Convert userId to ObjectId
+    const userObjectId = toObjectId(userId);
+    if (!userObjectId) {
+      throw new Error("Invalid user ID");
+    }
+
     // Build match conditions for counting
-    const matchConditions = { createdBy: userId };
+    const matchConditions = { createdBy: userObjectId };
 
     if (search) {
       matchConditions.$or = [
@@ -42,7 +48,7 @@ const getAllProducts = async (userId, query = {}) => {
     const total = await Product.countDocuments(matchConditions);
 
     // Use pipeline for paginated results
-    const pipeline = buildProductPipeline(userId, {
+    const pipeline = buildProductPipeline(userObjectId, {
       search,
       category,
       sortBy,
@@ -71,9 +77,14 @@ const getAllProducts = async (userId, query = {}) => {
 // Get single product by ID (only if created by the user)
 const getProductById = async (productId, userId) => {
   try {
+    const userObjectId = toObjectId(userId);
+    if (!userObjectId) {
+      throw new Error("Invalid user ID");
+    }
+
     const product = await Product.findOne({
       _id: productId,
-      createdBy: userId,
+      createdBy: userObjectId,
     }).populate("createdBy", "name email");
 
     if (!product) {
@@ -89,8 +100,13 @@ const getProductById = async (productId, userId) => {
 // Update product (only if created by the user)
 const updateProduct = async (productId, userId, updateData) => {
   try {
+    const userObjectId = toObjectId(userId);
+    if (!userObjectId) {
+      throw new Error("Invalid user ID");
+    }
+
     const product = await Product.findOneAndUpdate(
-      { _id: productId, createdBy: userId },
+      { _id: productId, createdBy: userObjectId },
       updateData,
       { new: true, runValidators: true }
     ).populate("createdBy", "name email");
@@ -108,9 +124,14 @@ const updateProduct = async (productId, userId, updateData) => {
 // Delete product (only if created by the user)
 const deleteProduct = async (productId, userId) => {
   try {
+    const userObjectId = toObjectId(userId);
+    if (!userObjectId) {
+      throw new Error("Invalid user ID");
+    }
+
     const product = await Product.findOneAndDelete({
       _id: productId,
-      createdBy: userId,
+      createdBy: userObjectId,
     });
 
     if (!product) {
@@ -126,8 +147,13 @@ const deleteProduct = async (productId, userId) => {
 // Get product statistics for a user
 const getProductStats = async (userId) => {
   try {
+    const userObjectId = toObjectId(userId);
+    if (!userObjectId) {
+      throw new Error("Invalid user ID");
+    }
+
     const stats = await Product.aggregate([
-      { $match: { createdBy: userId } },
+      { $match: { createdBy: userObjectId } },
       {
         $group: {
           _id: null,
