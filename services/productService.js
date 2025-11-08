@@ -1,5 +1,6 @@
 import { Product } from "../models/index.js";
-import { buildProductPipeline, toObjectId } from "../utils/index.js";
+import { buildProductPipeline } from "../helpers/index.js";
+import { toObjectId } from "../utils/index.js";
 
 // Create a new product
 const createProduct = async (productData) => {
