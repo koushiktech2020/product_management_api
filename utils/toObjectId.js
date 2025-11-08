@@ -10,9 +10,9 @@ const toObjectId = (id) => {
       return id;
     }
 
-    // If it's a valid ObjectId string, convert it
+    // If it's a valid ObjectId string, convert it using createFromHexString
     if (mongoose.Types.ObjectId.isValid(id)) {
-      return new mongoose.Types.ObjectId(id);
+      return mongoose.Types.ObjectId.createFromHexString(id);
     }
 
     // If invalid, return null
