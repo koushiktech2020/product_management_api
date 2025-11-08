@@ -36,7 +36,6 @@ const productSchema = new mongoose.Schema(
 
 // Index for better query performance
 productSchema.index({ name: "text", description: "text" });
-productSchema.index({ category: 1 });
 productSchema.index({ createdBy: 1 });
 
 const Product = mongoose.model("Product", productSchema);
