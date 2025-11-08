@@ -6,6 +6,7 @@ A Node.js REST API for managing products, built with Express.js, MongoDB, and JW
 
 - User authentication with JWT
 - Product CRUD operations (planned)
+- Mongoose models for User and Product
 - Secure password hashing with bcrypt
 - CORS support
 - Environment-based configuration
