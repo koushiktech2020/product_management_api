@@ -1,7 +1,12 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { connectDB } from "./utils/index.js";
+
 const app = express();
+
+// Connect to database
+connectDB();
 
 // Middleware
 app.use(express.json());
