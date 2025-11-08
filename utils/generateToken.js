@@ -2,13 +2,14 @@ import jwt from "jsonwebtoken";
 
 const generateToken = (userData = {}) => {
   try {
-    const { _id, email, role } = userData;
+    const { _id, email, role, tokenVersion } = userData;
 
     // Create payload
     const payload = {
       _id,
       email,
       role: role || "user",
+      tokenVersion: tokenVersion || 0,
     };
 
     // Generate token with expiration from env

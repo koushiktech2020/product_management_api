@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
+import { User } from "../models/index.js";
 
-const authenticateToken = (req, res, next) => {
+const authenticateToken = async (req, res, next) => {
   try {
     // Get token from cookies
     const token = req.cookies?.token;
@@ -14,6 +15,23 @@ const authenticateToken = (req, res, next) => {
 
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Check if user still exists and token version is valid
+    const user = await User.findById(decoded._id);
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found. Token is invalid.",
+      });
+    }
+
+    // Check token version
+    if (user.tokenVersion !== decoded.tokenVersion) {
+      return res.status(401).json({
+        success: false,
+        message: "Token has been invalidated. Please login again.",
+      });
+    }
 
     // Set user data on request object
     req.user = {

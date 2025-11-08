@@ -5,9 +5,10 @@ A Node.js REST API for managing products, built with Express.js, MongoDB, and JW
 ## Features
 
 - MongoDB database connection with Mongoose
-- User authentication with JWT
+- User authentication with JWT (register, login, logout)
 - JWT middleware for token validation from cookies
 - Token generation utility functions
+- User profile management and password change
 - Product CRUD operations with user-based access control
 - Business logic services with helper functions
 - Mongoose models for User and Product
@@ -55,9 +56,15 @@ A Node.js REST API for managing products, built with Express.js, MongoDB, and JW
 
 The API will be available at `http://localhost:5000` (or the port specified in your `.env` file).
 
-### Current Endpoints
+### Authentication Endpoints
 
-- `GET /` - Welcome message
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - Login user
+- `POST /api/auth/logout` - Logout user (clear cookie)
+- `POST /api/auth/logout-all` - Logout from all devices (requires auth)
+- `GET /api/auth/profile` - Get user profile (requires auth)
+- `PUT /api/auth/profile` - Update user profile (requires auth)
+- `PUT /api/auth/change-password` - Change password (requires auth)
 
 ### Product Endpoints (Require Authentication)
 
