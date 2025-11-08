@@ -2,6 +2,18 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
+    // Check if already connected
+    if (mongoose.connection.readyState === 1) {
+      console.log("MongoDB already connected");
+      return;
+    }
+
+    // Check if currently connecting
+    if (mongoose.connection.readyState === 2) {
+      console.log("MongoDB connection in progress...");
+      return;
+    }
+
     const mongoURI =
       process.env.MONGO_URI || "mongodb://localhost:27017/product_management";
 
