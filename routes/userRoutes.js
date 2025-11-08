@@ -8,13 +8,17 @@ import {
   updateProfileController,
   changePasswordController,
 } from "../controllers/index.js";
-import { authenticateToken } from "../middleware/index.js";
+import {
+  authenticateToken,
+  authLimiter,
+  loginLimiter,
+} from "../middleware/index.js";
 
 const router = express.Router();
 
-// Public routes
-router.post("/register", registerController);
-router.post("/login", loginController);
+// Public routes with rate limiting
+router.post("/register", authLimiter, registerController);
+router.post("/login", loginLimiter, loginController);
 
 // Protected routes (require authentication)
 router.post("/logout", authenticateToken, logoutController);

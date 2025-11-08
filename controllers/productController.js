@@ -10,9 +10,12 @@ import {
 // Create a new product
 const createProductController = async (req, res) => {
   try {
+    const userId = req.user._id; // Get user ID from JWT middleware
+
+    // Include user ID in product data
     const productData = {
       ...req.body,
-      createdBy: req.user._id, // Get user ID from JWT middleware
+      createdBy: userId,
     };
 
     const product = await createProduct(productData);

@@ -40,8 +40,8 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Index for better query performance
-userSchema.index({ email: 1 });
+// Index for better query performance (tokenVersion for logout-all functionality)
+userSchema.index({ tokenVersion: 1 });
 
 const User = mongoose.model("User", userSchema);
 

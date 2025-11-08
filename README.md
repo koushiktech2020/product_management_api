@@ -12,6 +12,7 @@ A Node.js REST API for managing products, built with Express.js, MongoDB, and JW
 - Product CRUD operations with user-based access control
 - Business logic services with helper functions
 - Organized route structure with separate auth and product routes
+- **API Rate Limiting** for security and abuse prevention
 - Mongoose models for User and Product
 - Secure password hashing with bcrypt
 - CORS support
@@ -177,6 +178,35 @@ Content-Type: application/json
 GET /api/products?page=1&limit=5&search=laptop&category=electronics&sortBy=price&sortOrder=asc
 Authorization: Bearer <token>
 ```
+
+## Rate Limiting
+
+This API implements rate limiting to prevent abuse and ensure fair usage:
+
+### Limits by Route Type:
+
+- **General API**: 100 requests per 15 minutes per IP
+- **Authentication**: 5 requests per 15 minutes per IP (register/login)
+- **Login Attempts**: 3 failed attempts per 5 minutes per IP+email combination
+- **Product Operations**: 50 requests per 10 minutes per IP
+
+### Rate Limit Headers:
+
+When rate limited, the API returns:
+
+```json
+{
+  "success": false,
+  "message": "Too many requests from this IP, please try again later.",
+  "retryAfter": "15 minutes"
+}
+```
+
+Rate limit information is also included in response headers:
+
+- `RateLimit-Limit`: Maximum requests allowed
+- `RateLimit-Remaining`: Remaining requests in current window
+- `RateLimit-Reset`: Time when the limit resets (Unix timestamp)
 
 ## Scripts
 
