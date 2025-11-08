@@ -8,7 +8,8 @@ A Node.js REST API for managing products, built with Express.js, MongoDB, and JW
 - User authentication with JWT
 - JWT middleware for token validation from cookies
 - Token generation utility functions
-- Product CRUD operations (planned)
+- Product CRUD operations with user-based access control
+- Business logic services with helper functions
 - Mongoose models for User and Product
 - Secure password hashing with bcrypt
 - CORS support
@@ -58,10 +59,23 @@ The API will be available at `http://localhost:5000` (or the port specified in y
 
 - `GET /` - Welcome message
 
-### Planned Endpoints
+### Product Endpoints (Require Authentication)
 
-- Authentication: `/api/auth/login`, `/api/auth/register`
-- Products: `/api/products` (CRUD operations)
+- `GET /api/products` - Get all products for logged-in user (with pagination, search, filtering)
+- `GET /api/products/:id` - Get single product by ID
+- `POST /api/products` - Create new product
+- `PUT /api/products/:id` - Update product
+- `DELETE /api/products/:id` - Delete product
+- `GET /api/products/stats` - Get product statistics for user
+
+### Query Parameters for GET /api/products:
+
+- `page` - Page number (default: 1)
+- `limit` - Items per page (default: 10)
+- `search` - Search in name/description
+- `category` - Filter by category
+- `sortBy` - Sort field (default: createdAt)
+- `sortOrder` - Sort order (asc/desc, default: desc)
 
 ## Technologies Used
 
