@@ -5,6 +5,8 @@ A Node.js REST API for managing products, built with Express.js, MongoDB, and JW
 ## Features
 
 - User authentication with JWT
+- JWT middleware for token validation from cookies
+- Token generation utility functions
 - Product CRUD operations (planned)
 - Mongoose models for User and Product
 - Secure password hashing with bcrypt
@@ -31,7 +33,8 @@ A Node.js REST API for managing products, built with Express.js, MongoDB, and JW
    ```
    PORT=5000
    MONGO_URI=mongodb://localhost:27017/product_management
-   JWT_SECRET=your_jwt_secret_key
+   JWT_SECRET=your_super_secret_jwt_key_change_this_in_production_123456789
+   JWT_EXPIRES_IN=7d
    ```
 
 4. Start the server:
