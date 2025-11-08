@@ -1,4 +1,5 @@
 import { Product } from "../models/index.js";
+import { buildProductPipeline } from "../helpers/index.js";
 
 // Create a new product
 const createProduct = async (productData) => {
@@ -23,7 +24,7 @@ const getAllProducts = async (userId, query = {}) => {
       sortOrder = "desc",
     } = query;
 
-    // Build match conditions
+    // Build match conditions for counting
     const matchConditions = { createdBy: userId };
 
     if (search) {
@@ -37,20 +38,20 @@ const getAllProducts = async (userId, query = {}) => {
       matchConditions.category = { $regex: category, $options: "i" };
     }
 
-    // Calculate skip value for pagination
-    const skip = (page - 1) * limit;
-
-    // Build sort object
-    const sort = {};
-    sort[sortBy] = sortOrder === "desc" ? -1 : 1;
-
-    const products = await Product.find(matchConditions)
-      .sort(sort)
-      .skip(skip)
-      .limit(parseInt(limit))
-      .populate("createdBy", "name email");
-
+    // Get total count
     const total = await Product.countDocuments(matchConditions);
+
+    // Use pipeline for paginated results
+    const pipeline = buildProductPipeline(userId, {
+      search,
+      category,
+      sortBy,
+      sortOrder,
+      page: parseInt(page),
+      limit: parseInt(limit),
+    });
+
+    const products = await Product.aggregate(pipeline);
 
     return {
       products,

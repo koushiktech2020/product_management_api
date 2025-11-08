@@ -10,6 +10,7 @@ A Node.js REST API for managing products, built with Express.js, MongoDB, and JW
 - Token generation utility functions
 - User profile management and password change
 - Product CRUD operations with user-based access control
+- **Optimized database queries** using MongoDB aggregation pipelines for better performance
 - Business logic services with helper functions
 - Organized route structure with separate auth and product routes
 - **API Rate Limiting** for security and abuse prevention
