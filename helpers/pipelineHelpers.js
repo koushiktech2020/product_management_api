@@ -11,9 +11,7 @@ const buildProductPipeline = (userId, options = {}) => {
     limit = 10,
   } = options;
 
-  const pipeline = [];
-
-  // Match stage - filter by user and other conditions
+  // Build match conditions
   const matchConditions = { createdBy: userId };
 
   if (search) {
@@ -33,56 +31,51 @@ const buildProductPipeline = (userId, options = {}) => {
     if (maxPrice !== undefined) matchConditions.price.$lte = maxPrice;
   }
 
-  pipeline.push({ $match: matchConditions });
-
-  // Lookup stage - populate createdBy field
-  pipeline.push({
-    $lookup: {
-      from: "users",
-      localField: "createdBy",
-      foreignField: "_id",
-      as: "creator",
-    },
-  });
-
-  // Unwind the creator array (since it's a single user)
-  pipeline.push({
-    $unwind: {
-      path: "$creator",
-      preserveNullAndEmptyArrays: true,
-    },
-  });
-
-  // Project stage - select only needed fields
-  pipeline.push({
-    $project: {
-      name: 1,
-      description: 1,
-      price: 1,
-      category: 1,
-      stock: 1,
-      image: 1,
-      createdBy: {
-        _id: "$creator._id",
-        name: "$creator.name",
-        email: "$creator.email",
-      },
-      createdAt: 1,
-      updatedAt: 1,
-    },
-  });
-
-  // Sort stage
+  // Build sort object
   const sort = {};
   sort[sortBy] = sortOrder === "desc" ? -1 : 1;
-  pipeline.push({ $sort: sort });
 
-  // Pagination stages
+  // Calculate skip for pagination
   const skip = (page - 1) * limit;
-  pipeline.push({ $skip: skip });
-  pipeline.push({ $limit: limit });
 
-  return pipeline;
+  // Return optimized pipeline array directly
+  return [
+    { $match: matchConditions },
+    {
+      $lookup: {
+        from: "users",
+        localField: "createdBy",
+        foreignField: "_id",
+        as: "creator",
+      },
+    },
+    {
+      $unwind: {
+        path: "$creator",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        name: 1,
+        description: 1,
+        price: 1,
+        category: 1,
+        stock: 1,
+        image: 1,
+        createdBy: {
+          _id: "$creator._id",
+          name: "$creator.name",
+          email: "$creator.email",
+        },
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    },
+    { $sort: sort },
+    { $skip: skip },
+    { $limit: limit },
+  ];
 };
 
 // Helper function to build product stats pipeline
