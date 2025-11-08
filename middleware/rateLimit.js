@@ -1,4 +1,4 @@
-import rateLimit from "express-rate-limit";
+import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 
 // General API rate limiter - 100 requests per 15 minutes
 export const apiLimiter = rateLimit({
@@ -54,8 +54,10 @@ export const loginLimiter = rateLimit({
   legacyHeaders: false,
   // Only count failed login attempts
   skipSuccessfulRequests: true,
-  // Use a different key for login attempts
+  // Use a different key for login attempts with proper IPv6 support
   keyGenerator: (req) => {
-    return `login_${req.ip}_${req.body.email || "unknown"}`;
+    const ip = ipKeyGenerator(req);
+    const email = req.body?.email || "unknown";
+    return `login_${ip}_${email}`;
   },
 });
