@@ -5,12 +5,13 @@ A Node.js REST API for managing products, built with Express.js, MongoDB, and JW
 ## Features
 
 - MongoDB database connection with Mongoose
-- User authentication with JWT (register, login, logout)
+- User authentication with JWT (register, login, logout, logout-all)
 - JWT middleware for token validation from cookies
 - Token generation utility functions
 - User profile management and password change
 - Product CRUD operations with user-based access control
 - Business logic services with helper functions
+- Organized route structure with separate auth and product routes
 - Mongoose models for User and Product
 - Secure password hashing with bcrypt
 - CORS support
