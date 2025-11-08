@@ -85,7 +85,7 @@ product_management_api/
 
 ## Usage
 
-The API will be available at `http://localhost:5000` (or the port specified in your `.env` file).
+The API will be available at `http://localhost:5000/api` (or the port specified in your `.env` file).
 
 ### Authentication Endpoints
 
