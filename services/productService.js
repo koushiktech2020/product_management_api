@@ -19,10 +19,10 @@ const getAllProducts = async (userId, query = {}) => {
     const {
       page = 1,
       limit = 10,
-      search,
-      category,
       sortBy = "createdAt",
       sortOrder = "desc",
+      search,
+      category,
       price,
       minPrice,
       maxPrice,
@@ -31,6 +31,7 @@ const getAllProducts = async (userId, query = {}) => {
       maxQuantity,
       startDate,
       endDate,
+      createdAt,
     } = query;
     // CreatedAt date filtering
     if (startDate && !endDate) {
