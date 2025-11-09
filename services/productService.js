@@ -29,7 +29,37 @@ const getAllProducts = async (userId, query = {}) => {
       quantity,
       minQuantity,
       maxQuantity,
+      startDate,
+      endDate,
     } = query;
+    // CreatedAt date filtering
+    if (startDate && !endDate) {
+      // Only startDate provided: match that date (ignoring time)
+      const start = new Date(startDate);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(startDate);
+      end.setHours(23, 59, 59, 999);
+      matchConditions.createdAt = { $gte: start, $lte: end };
+    } else if (startDate && endDate) {
+      // Both startDate and endDate provided: match range
+      matchConditions.createdAt = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      };
+    }
+    // CreatedAt date filtering
+    if (createdAt) {
+      // If only createdAt is provided, match that date (ignoring time)
+      const start = new Date(createdAt);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(createdAt);
+      end.setHours(23, 59, 59, 999);
+      matchConditions.createdAt = { $gte: start, $lte: end };
+    } else if (startDate || endDate) {
+      matchConditions.createdAt = {};
+      if (startDate) matchConditions.createdAt.$gte = new Date(startDate);
+      if (endDate) matchConditions.createdAt.$lte = new Date(endDate);
+    }
 
     // Convert userId to ObjectId
     const userObjectId = toObjectId(userId);
@@ -41,10 +71,7 @@ const getAllProducts = async (userId, query = {}) => {
     const matchConditions = { createdBy: userObjectId };
 
     if (search) {
-      matchConditions.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
-      ];
+      matchConditions.name = { $regex: search, $options: "i" };
     }
 
     if (category) {
@@ -82,12 +109,6 @@ const getAllProducts = async (userId, query = {}) => {
       sortOrder,
       page: parseInt(page),
       limit: parseInt(limit),
-      price,
-      minPrice,
-      maxPrice,
-      quantity,
-      minQuantity,
-      maxQuantity,
     });
 
     const products = await Product.aggregate(pipeline);
