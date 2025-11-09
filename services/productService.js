@@ -23,6 +23,12 @@ const getAllProducts = async (userId, query = {}) => {
       category,
       sortBy = "createdAt",
       sortOrder = "desc",
+      price,
+      minPrice,
+      maxPrice,
+      quantity,
+      minQuantity,
+      maxQuantity,
     } = query;
 
     // Convert userId to ObjectId
@@ -45,6 +51,26 @@ const getAllProducts = async (userId, query = {}) => {
       matchConditions.category = { $regex: category, $options: "i" };
     }
 
+    // Price filtering
+    if (price !== undefined) {
+      matchConditions.price = price;
+    } else if (minPrice !== undefined || maxPrice !== undefined) {
+      matchConditions.price = {};
+      if (minPrice !== undefined) matchConditions.price.$gte = minPrice;
+      if (maxPrice !== undefined) matchConditions.price.$lte = maxPrice;
+    }
+
+    // Quantity filtering
+    if (quantity !== undefined) {
+      matchConditions.quantity = quantity;
+    } else if (minQuantity !== undefined || maxQuantity !== undefined) {
+      matchConditions.quantity = {};
+      if (minQuantity !== undefined)
+        matchConditions.quantity.$gte = minQuantity;
+      if (maxQuantity !== undefined)
+        matchConditions.quantity.$lte = maxQuantity;
+    }
+
     // Get total count
     const total = await Product.countDocuments(matchConditions);
 
@@ -56,6 +82,12 @@ const getAllProducts = async (userId, query = {}) => {
       sortOrder,
       page: parseInt(page),
       limit: parseInt(limit),
+      price,
+      minPrice,
+      maxPrice,
+      quantity,
+      minQuantity,
+      maxQuantity,
     });
 
     const products = await Product.aggregate(pipeline);
