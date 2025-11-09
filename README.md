@@ -114,6 +114,15 @@ The API will be available at `http://localhost:5000/api` (or the port specified 
 - `category` - Filter by category
 - `sortBy` - Sort field (default: createdAt)
 - `sortOrder` - Sort order (asc/desc, default: desc)
+- `price` - Exact price match
+- `minPrice` - Minimum price filter
+- `maxPrice` - Maximum price filter
+- `quantity` - Exact quantity match
+- `minQuantity` - Minimum quantity filter
+- `maxQuantity` - Maximum quantity filter
+- `startDate` - Start date for createdAt filter (YYYY-MM-DD)
+- `endDate` - End date for createdAt filter (YYYY-MM-DD)
+- `createdAt` - Exact date for createdAt filter (YYYY-MM-DD)
 
 ## Technologies Used
 
