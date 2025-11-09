@@ -61,7 +61,7 @@ const buildProductPipeline = (userId, options = {}) => {
         description: 1,
         price: 1,
         category: 1,
-        stock: 1,
+        quantity: 1,
         image: 1,
         createdBy: {
           _id: "$creator._id",
