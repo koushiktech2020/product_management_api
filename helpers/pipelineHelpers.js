@@ -2,7 +2,6 @@
 const buildProductPipeline = (userId, options = {}) => {
   const {
     search,
-    category,
     minPrice,
     maxPrice,
     sortBy = "createdAt",
@@ -19,10 +18,6 @@ const buildProductPipeline = (userId, options = {}) => {
       { name: { $regex: search, $options: "i" } },
       { description: { $regex: search, $options: "i" } },
     ];
-  }
-
-  if (category) {
-    matchConditions.category = { $regex: category, $options: "i" };
   }
 
   if (minPrice !== undefined || maxPrice !== undefined) {
@@ -60,7 +55,6 @@ const buildProductPipeline = (userId, options = {}) => {
         name: 1,
         description: 1,
         price: 1,
-        category: 1,
         quantity: 1,
         image: 1,
         createdBy: {

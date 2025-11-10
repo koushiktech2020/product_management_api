@@ -22,7 +22,6 @@ const getAllProducts = async (userId, query = {}) => {
       sortBy = "createdAt",
       sortOrder = "desc",
       name,
-      category,
       minPrice,
       maxPrice,
       minQuantity,
@@ -43,11 +42,6 @@ const getAllProducts = async (userId, query = {}) => {
     // Name filtering
     if (name) {
       matchConditions.name = { $regex: name, $options: "i" };
-    }
-
-    // Category filtering
-    if (category) {
-      matchConditions.category = { $regex: category, $options: "i" };
     }
 
     // Price filtering
@@ -89,7 +83,6 @@ const getAllProducts = async (userId, query = {}) => {
     // Use pipeline for paginated results
     const pipeline = buildProductPipeline(userObjectId, {
       search: name,
-      category,
       sortBy,
       sortOrder,
       page: parseInt(page),

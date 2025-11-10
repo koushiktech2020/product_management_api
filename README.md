@@ -111,7 +111,6 @@ The API will be available at `http://localhost:5000/api` (or the port specified 
 - `page` - Page number (default: 1)
 - `limit` - Items per page (default: 10)
 - `name` - Search in product name
-- `category` - Filter by category
 - `sortBy` - Sort field (default: createdAt)
 - `sortOrder` - Sort order (asc/desc, default: desc)
 - `minPrice` - Minimum price filter
