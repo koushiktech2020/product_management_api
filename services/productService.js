@@ -21,46 +21,15 @@ const getAllProducts = async (userId, query = {}) => {
       limit = 10,
       sortBy = "createdAt",
       sortOrder = "desc",
-      search,
+      name,
       category,
-      price,
       minPrice,
       maxPrice,
-      quantity,
       minQuantity,
       maxQuantity,
       startDate,
       endDate,
-      createdAt,
     } = query;
-    // CreatedAt date filtering
-    if (startDate && !endDate) {
-      // Only startDate provided: match that date (ignoring time)
-      const start = new Date(startDate);
-      start.setHours(0, 0, 0, 0);
-      const end = new Date(startDate);
-      end.setHours(23, 59, 59, 999);
-      matchConditions.createdAt = { $gte: start, $lte: end };
-    } else if (startDate && endDate) {
-      // Both startDate and endDate provided: match range
-      matchConditions.createdAt = {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate),
-      };
-    }
-    // CreatedAt date filtering
-    if (createdAt) {
-      // If only createdAt is provided, match that date (ignoring time)
-      const start = new Date(createdAt);
-      start.setHours(0, 0, 0, 0);
-      const end = new Date(createdAt);
-      end.setHours(23, 59, 59, 999);
-      matchConditions.createdAt = { $gte: start, $lte: end };
-    } else if (startDate || endDate) {
-      matchConditions.createdAt = {};
-      if (startDate) matchConditions.createdAt.$gte = new Date(startDate);
-      if (endDate) matchConditions.createdAt.$lte = new Date(endDate);
-    }
 
     // Convert userId to ObjectId
     const userObjectId = toObjectId(userId);
@@ -71,32 +40,47 @@ const getAllProducts = async (userId, query = {}) => {
     // Build match conditions for counting
     const matchConditions = { createdBy: userObjectId };
 
-    if (search) {
-      matchConditions.name = { $regex: search, $options: "i" };
+    // Name filtering
+    if (name) {
+      matchConditions.name = { $regex: name, $options: "i" };
     }
 
+    // Category filtering
     if (category) {
       matchConditions.category = { $regex: category, $options: "i" };
     }
 
     // Price filtering
-    if (price !== undefined) {
-      matchConditions.price = price;
-    } else if (minPrice !== undefined || maxPrice !== undefined) {
-      matchConditions.price = {};
-      if (minPrice !== undefined) matchConditions.price.$gte = minPrice;
-      if (maxPrice !== undefined) matchConditions.price.$lte = maxPrice;
+    if (minPrice && maxPrice) {
+      matchConditions.price = { $gte: minPrice, $lte: maxPrice };
+    } else if (minPrice) {
+      matchConditions.price = { $gte: minPrice };
+    } else if (maxPrice) {
+      matchConditions.price = { $lte: maxPrice };
     }
 
     // Quantity filtering
-    if (quantity !== undefined) {
-      matchConditions.quantity = quantity;
-    } else if (minQuantity !== undefined || maxQuantity !== undefined) {
-      matchConditions.quantity = {};
-      if (minQuantity !== undefined)
-        matchConditions.quantity.$gte = minQuantity;
-      if (maxQuantity !== undefined)
-        matchConditions.quantity.$lte = maxQuantity;
+    if (minQuantity && maxQuantity) {
+      matchConditions.quantity = { $gte: minQuantity, $lte: maxQuantity };
+    } else if (minQuantity) {
+      matchConditions.quantity = { $gte: minQuantity };
+    } else if (maxQuantity) {
+      matchConditions.quantity = { $lte: maxQuantity };
+    }
+
+    // CreatedAt date filtering
+    if (startDate && endDate) {
+      matchConditions.createdAt = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      };
+    } else {
+      if (startDate) {
+        matchConditions.createdAt = { $gte: new Date(startDate) };
+      }
+      if (endDate) {
+        matchConditions.createdAt = { $lte: new Date(endDate) };
+      }
     }
 
     // Get total count
@@ -104,7 +88,7 @@ const getAllProducts = async (userId, query = {}) => {
 
     // Use pipeline for paginated results
     const pipeline = buildProductPipeline(userObjectId, {
-      search,
+      search: name,
       category,
       sortBy,
       sortOrder,
