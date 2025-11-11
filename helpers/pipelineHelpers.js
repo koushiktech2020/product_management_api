@@ -1,30 +1,12 @@
 // Helper function to build product aggregation pipeline
 const buildProductPipeline = (userId, options = {}) => {
   const {
-    search,
-    minPrice,
-    maxPrice,
-    sortBy = "createdAt",
-    sortOrder = "desc",
+    matchConditions,
     page = 1,
     limit = 10,
+    sortBy = "createdAt",
+    sortOrder = "desc",
   } = options;
-
-  // Build match conditions
-  const matchConditions = { createdBy: userId };
-
-  if (search) {
-    matchConditions.$or = [
-      { name: { $regex: search, $options: "i" } },
-      { description: { $regex: search, $options: "i" } },
-    ];
-  }
-
-  if (minPrice !== undefined || maxPrice !== undefined) {
-    matchConditions.price = {};
-    if (minPrice !== undefined) matchConditions.price.$gte = minPrice;
-    if (maxPrice !== undefined) matchConditions.price.$lte = maxPrice;
-  }
 
   // Build sort object
   const sort = {};

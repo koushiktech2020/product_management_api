@@ -36,30 +36,36 @@ const getAllProducts = async (userId, query = {}) => {
       throw new Error("Invalid user ID");
     }
 
-    // Build match conditions for counting
+    // Build match conditions
     const matchConditions = { createdBy: userObjectId };
 
-    // Name filtering
+    // Name search
     if (name) {
       matchConditions.name = { $regex: name, $options: "i" };
     }
 
     // Price filtering
     if (minPrice && maxPrice) {
-      matchConditions.price = { $gte: minPrice, $lte: maxPrice };
+      matchConditions.$and = [
+        { price: { $gte: parseInt(minPrice) } },
+        { price: { $lte: parseInt(maxPrice) } },
+      ];
     } else if (minPrice) {
-      matchConditions.price = { $gte: minPrice };
+      matchConditions.price = { $gte: parseInt(minPrice) };
     } else if (maxPrice) {
-      matchConditions.price = { $lte: maxPrice };
+      matchConditions.price = { $lte: parseInt(maxPrice) };
     }
 
     // Quantity filtering
     if (minQuantity && maxQuantity) {
-      matchConditions.quantity = { $gte: minQuantity, $lte: maxQuantity };
+      matchConditions.$and = [
+        { quantity: { $gte: parseInt(minQuantity) } },
+        { quantity: { $lte: parseInt(maxQuantity) } },
+      ];
     } else if (minQuantity) {
-      matchConditions.quantity = { $gte: minQuantity };
+      matchConditions.quantity = { $gte: parseInt(minQuantity) };
     } else if (maxQuantity) {
-      matchConditions.quantity = { $lte: maxQuantity };
+      matchConditions.quantity = { $lte: parseInt(maxQuantity) };
     }
 
     // CreatedAt date filtering
@@ -77,19 +83,19 @@ const getAllProducts = async (userId, query = {}) => {
       }
     }
 
-    // Get total count
-    const total = await Product.countDocuments(matchConditions);
-
     // Use pipeline for paginated results
     const pipeline = buildProductPipeline(userObjectId, {
-      search: name,
+      matchConditions,
+      page,
+      limit,
       sortBy,
       sortOrder,
-      page: parseInt(page),
-      limit: parseInt(limit),
     });
 
     const products = await Product.aggregate(pipeline);
+
+    // Get total count for pagination
+    const total = await Product.countDocuments(matchConditions);
 
     return {
       products,
