@@ -24,24 +24,33 @@ A Node.js REST API for managing products, built with Express.js, MongoDB, and JW
 ```
 product_management_api/
 ├── controllers/          # Request handlers
+│   ├── index.js              # Exports all controllers
 │   ├── userController.js     # Auth controllers
 │   └── productController.js  # Product CRUD controllers
 ├── services/            # Business logic
+│   ├── index.js              # Exports all services
 │   ├── userService.js        # Auth services
 │   └── productService.js     # Product services
 ├── models/              # Database models
+│   ├── index.js              # Exports all models
 │   ├── User.js              # User schema
 │   └── Product.js           # Product schema
 ├── routes/              # API routes
+│   ├── index.js              # Exports all routes
 │   ├── userRoutes.js        # Auth routes (/api/auth/*)
 │   └── productRoutes.js     # Product routes (/api/products/*)
 ├── middleware/          # Custom middleware
-│   └── authenticateToken.js # JWT validation
+│   ├── index.js              # Exports all middleware
+│   ├── authenticateToken.js # JWT validation
+│   └── rateLimit.js         # Rate limiting middleware
 ├── helpers/             # Utility functions
+│   ├── index.js              # Exports all helpers
 │   └── pipelineHelpers.js   # MongoDB aggregation helpers
 ├── utils/               # Core utilities
+│   ├── index.js              # Exports all utils
 │   ├── connectDB.js         # Database connection
-│   └── generateToken.js     # JWT token generation
+│   ├── generateToken.js     # JWT token generation
+│   └── toObjectId.js        # ObjectId conversion utility
 ├── app.js               # Express app setup
 ├── index.js             # Server entry point
 └── README.md
@@ -181,7 +190,7 @@ Content-Type: application/json
 **Get products with search and pagination:**
 
 ```bash
-GET /api/products?page=1&limit=5&search=laptop&category=electronics&sortBy=price&sortOrder=asc
+GET /api/products?page=1&limit=5&name=laptop&sortBy=price&sortOrder=asc
 Authorization: Bearer <token>
 ```
 
