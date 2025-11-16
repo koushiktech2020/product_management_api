@@ -118,7 +118,7 @@ The API will be available at `http://localhost:5000/api` (or the port specified 
 ### Query Parameters for GET /api/products:
 
 - `page` - Page number (default: 1)
-- `limit` - Items per page (default: 10)
+- `limit` - Items per page (default: 6)
 - `name` - Search in product name
 - `sortBy` - Sort field (default: createdAt)
 - `sortOrder` - Sort order (asc/desc, default: desc)
@@ -190,7 +190,7 @@ Content-Type: application/json
 **Get products with search and pagination:**
 
 ```bash
-GET /api/products?page=1&limit=5&name=laptop&sortBy=price&sortOrder=asc
+GET /api/products?page=1&limit=6&name=laptop&sortBy=price&sortOrder=asc
 Authorization: Bearer <token>
 ```
 
