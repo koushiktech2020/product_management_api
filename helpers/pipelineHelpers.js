@@ -3,7 +3,7 @@ const buildProductPipeline = (userId, options = {}) => {
   const {
     matchConditions,
     page = 1,
-    limit = 10,
+    limit = 6,
     sortBy = "createdAt",
     sortOrder = "desc",
   } = options;

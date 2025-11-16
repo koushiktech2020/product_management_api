@@ -18,7 +18,7 @@ const getAllProducts = async (userId, query = {}) => {
   try {
     let {
       page = 1,
-      limit = 10,
+      limit = 6,
       sortBy = "createdAt",
       sortOrder = "desc",
       name,
@@ -30,7 +30,7 @@ const getAllProducts = async (userId, query = {}) => {
       endDate,
     } = query;
 
-    // page এবং limit কে parseInt করে নাও
+    //  Convert page and limit to integers
     page = parseInt(page);
     limit = parseInt(limit);
 
