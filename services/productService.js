@@ -16,9 +16,10 @@ const createProduct = async (productData) => {
 // Get all products for a specific user
 const getAllProducts = async (userId, query = {}) => {
   try {
+    // Destructure query parameters
     let {
-      page = 1,
-      limit = 6,
+      page = "1",
+      limit = "10",
       sortBy = "createdAt",
       sortOrder = "desc",
       name,
@@ -30,7 +31,7 @@ const getAllProducts = async (userId, query = {}) => {
       endDate,
     } = query;
 
-    //  Convert page and limit to integers
+    // Convert page and limit to integers
     page = parseInt(page);
     limit = parseInt(limit);
 
