@@ -16,11 +16,10 @@ const createProduct = async (productData) => {
 // Get all products for a specific user
 const getAllProducts = async (userId, query = {}) => {
   try {
-    const {
-      page = 1,
-      limit = 10,
+    let {
+      page = "1",
+      limit = "10",
       sortBy = "createdAt",
-      sortOrder = "desc",
       name,
       minPrice,
       maxPrice,
@@ -29,6 +28,14 @@ const getAllProducts = async (userId, query = {}) => {
       startDate,
       endDate,
     } = query;
+
+    // Parse page and limit as integers
+    page = parseInt(page);
+    limit = parseInt(limit);
+
+    // Default sort: createdAt descending
+    let sort = {};
+    sort[sortBy] = -1;
 
     // Convert userId to ObjectId
     const userObjectId = toObjectId(userId);
@@ -88,8 +95,7 @@ const getAllProducts = async (userId, query = {}) => {
       matchConditions,
       page,
       limit,
-      sortBy,
-      sortOrder,
+      sort,
     });
 
     const products = await Product.aggregate(pipeline);
@@ -100,7 +106,7 @@ const getAllProducts = async (userId, query = {}) => {
     return {
       products,
       pagination: {
-        currentPage: parseInt(page),
+        currentPage: page,
         totalPages: Math.ceil(total / limit),
         totalProducts: total,
         hasNext: page * limit < total,
