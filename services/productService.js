@@ -19,7 +19,7 @@ const getAllProducts = async (userId, query = {}) => {
     // Destructure query parameters
     let {
       page = "1",
-      limit = "10",
+      limit = "6",
       sortBy = "createdAt",
       sortOrder = "desc",
       name,
