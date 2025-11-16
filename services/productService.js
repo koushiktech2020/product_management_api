@@ -16,10 +16,12 @@ const createProduct = async (productData) => {
 // Get all products for a specific user
 const getAllProducts = async (userId, query = {}) => {
   try {
+    // Destructure query parameters with default values
     let {
       page = "1",
       limit = "10",
       sortBy = "createdAt",
+      sortOrder = "desc",
       name,
       minPrice,
       maxPrice,
@@ -33,9 +35,15 @@ const getAllProducts = async (userId, query = {}) => {
     page = parseInt(page);
     limit = parseInt(limit);
 
-    // Default sort: createdAt descending
+    // Refine sortOrder
+    let refinedSortOrder = -1;
+    if (typeof sortOrder === "string" && sortOrder.toLowerCase() === "asc") {
+      refinedSortOrder = 1;
+    }
+
+    // Default sort: sortBy field, refined sortOrder
     let sort = {};
-    sort[sortBy] = -1;
+    sort[sortBy] = refinedSortOrder;
 
     // Convert userId to ObjectId
     const userObjectId = toObjectId(userId);
