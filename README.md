@@ -114,6 +114,7 @@ The API will be available at `http://localhost:5000/api` (or the port specified 
 - `PUT /api/products/:id` - Update product
 - `DELETE /api/products/:id` - Delete product
 - `GET /api/products/stats` - Get product statistics for user
+- `POST /api/products/bulk` - Bulk add products (send array of product objects)
 
 ### Query Parameters for GET /api/products:
 
@@ -192,6 +193,33 @@ Content-Type: application/json
 ```bash
 GET /api/products?page=1&limit=6&name=laptop&sortBy=price&sortOrder=asc
 Authorization: Bearer <token>
+```
+
+### Bulk Product Add Example
+
+**Bulk add products:**
+
+```bash
+POST /api/products/bulk
+Authorization: Bearer <token>
+Content-Type: application/json
+
+[
+  {
+    "name": "Laptop",
+    "description": "Gaming laptop",
+    "price": 1200,
+    "category": "Electronics",
+    "stock": 10
+  },
+  {
+    "name": "Mouse",
+    "description": "Wireless mouse",
+    "price": 25,
+    "category": "Electronics",
+    "stock": 50
+  }
+]
 ```
 
 ## Rate Limiting
