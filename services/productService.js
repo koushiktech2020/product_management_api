@@ -13,6 +13,17 @@ const createProduct = async (productData) => {
   }
 };
 
+// Bulk create products
+const bulkCreateProducts = async (productsData) => {
+  try {
+    // productsData: array of product objects
+    const products = await Product.insertMany(productsData);
+    return products;
+  } catch (error) {
+    throw new Error(`Error bulk creating products: ${error.message}`);
+  }
+};
+
 // Get all products for a specific user
 const getAllProducts = async (userId, query = {}) => {
   try {
@@ -225,6 +236,7 @@ const getProductStats = async (userId) => {
 
 export {
   createProduct,
+  bulkCreateProducts,
   getAllProducts,
   getProductById,
   updateProduct,

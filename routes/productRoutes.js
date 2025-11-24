@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createProductController,
+  bulkCreateProductsController,
   getAllProductsController,
   getProductByIdController,
   updateProductController,
@@ -24,5 +25,8 @@ router.get("/stats", getProductStatsController);
 router.get("/:id", getProductByIdController);
 router.put("/:id", updateProductController);
 router.delete("/:id", deleteProductController);
+
+// Bulk product creation route
+router.post("/bulk", bulkCreateProductsController);
 
 export default router;

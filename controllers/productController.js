@@ -5,6 +5,7 @@ import {
   updateProduct,
   deleteProduct,
   getProductStats,
+  bulkCreateProducts,
 } from "../services/productService.js";
 
 // Create a new product
@@ -24,6 +25,29 @@ const createProductController = async (req, res) => {
       success: true,
       data: product,
       message: "Product created successfully",
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Bulk create products
+const bulkCreateProductsController = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    // Expecting req.body to be an array of product objects
+    const productsData = req.body.map((product) => ({
+      ...product,
+      createdBy: userId,
+    }));
+    const products = await bulkCreateProducts(productsData);
+    res.status(201).json({
+      success: true,
+      data: products,
+      message: "Bulk products created successfully",
     });
   } catch (error) {
     res.status(400).json({
@@ -140,6 +164,7 @@ const getProductStatsController = async (req, res) => {
 
 export {
   createProductController,
+  bulkCreateProductsController,
   getAllProductsController,
   getProductByIdController,
   updateProductController,
